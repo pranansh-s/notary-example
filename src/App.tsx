@@ -1,25 +1,43 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import Container from '@mui/material/Container';
+import { createContext, useEffect, useState } from 'react';
+import Header from './components/Header';
+import Table from './components/Table';
+
+interface Company {
+  name: string,
+  email: string,
+  status: string
+}
+
+interface Data {
+  data: Company[] | [],
+  setData: () => void;
+}
+
+export const DataContext = createContext<Data | null>(null);
 
 function App() {
+  const [data, setData] = useState<Company[]>([]);
+
+  useEffect(() => {
+    if(data.length === 0) updateData();
+  }, [])
+
+  const updateData = () => {
+    setData([]);
+    fetch('http://demo2211087.mockable.io/mock', { method: 'post' })
+    .then(res => res.json())
+    .then(res => res.companies)
+    .then(res => setData(res));
+  }
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <DataContext.Provider value={{ data: data, setData: updateData }}>
+       <Container maxWidth='lg'>
+          <Header/>
+          <Table/>
+       </Container>
+    </DataContext.Provider>
   );
 }
 
