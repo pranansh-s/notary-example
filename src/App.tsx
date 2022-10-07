@@ -25,7 +25,7 @@ function App() {
 
   const updateData = () => {
     setData([]);
-    fetch('http://demo2211087.mockable.io/mock', { method: 'post' })
+    fetch('https://demo2211087.mockable.io/mock', { method: 'post' })
     .then(res => res.json())
     .then(res => res.companies)
     .then(res => setData(res));
